@@ -16,7 +16,7 @@ def init_weights(m):
         nn.init.normal_(m.weight, std=0.01)
 
 
-net.apply(init_weights);
+net.apply(init_weights)
 # %%
 batch_size, lr, num_epochs = 256, 0.1, 10
 loss = nn.CrossEntropyLoss(reduction='none')

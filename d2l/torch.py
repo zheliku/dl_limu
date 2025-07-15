@@ -44,7 +44,8 @@ def use_svg_display():
     """使用svg格式在Jupyter中显示绘图
 
     Defined in :numref:`sec_calculus`"""
-    backend_inline.set_matplotlib_formats('svg')
+    # backend_inline.set_matplotlib_formats('svg')
+    backend_inline.set_matplotlib_formats('png')
 
 
 def set_figsize(figsize=(3.5, 2.5)):
@@ -309,6 +310,7 @@ class Animator:
         # 增量地绘制多条线
         if legend is None:
             legend = []
+        plt.ion()  # 启用交互模式 - 这是PyCharm中关键的一步
         d2l.use_svg_display()
         self.fig, self.axes = d2l.plt.subplots(nrows, ncols, figsize=figsize)
         if nrows * ncols == 1:
@@ -337,9 +339,11 @@ class Animator:
         for x, y, fmt in zip(self.X, self.Y, self.fmts):
             self.axes[0].plot(x, y, fmt)
         self.config_axes()
+        plt.draw()  # 使用draw而不是display
         display.display(self.fig)
+        # plt.pause(0.1)  # 添加短暂暂停让图像更新
         display.clear_output(wait=True)
-        plt.show()
+        # plt.show()
 
 
 def train_ch3(net, train_iter, test_iter, loss, num_epochs, updater):
@@ -352,6 +356,7 @@ def train_ch3(net, train_iter, test_iter, loss, num_epochs, updater):
         train_metrics = train_epoch_ch3(net, train_iter, loss, updater)
         test_acc = evaluate_accuracy(net, test_iter)
         animator.add(epoch + 1, train_metrics + (test_acc,))
+        # plt.show()
     train_loss, train_acc = train_metrics
     assert train_loss < 0.5, train_loss
     assert train_acc <= 1 and train_acc > 0.7, train_acc
